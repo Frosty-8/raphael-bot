@@ -115,7 +115,7 @@ def social_media(command):
         speak("Opening your whatsapp account")
         webbrowser.open("https://web.whatsapp.com/")
     elif 'github' in command:
-        speak("Opening your discord account")
+        speak("Opening your github account")
         webbrowser.open("https://github.com/Frosty-8")
     elif 'instagram' in command:
         speak("Opening your instagram account")
@@ -188,7 +188,9 @@ def condition():
             speak("Boss, battery is very low. Please connect to a charger.")
 
 if  __name__ == "__main__":
+    speak("Hello,I am Raphael, your personal assistant")
     wishMe()
+    speak("How can I help you ?")
     #engine_talk("Allow ")
     while True:
         query = command().lower()
@@ -229,4 +231,4 @@ if  __name__ == "__main__":
             condition()
         elif "exit" in query:
             sys.exit()
-# speak("Hello,I am Raphael, your personal assistant, How can I help you ?") 
+ 
