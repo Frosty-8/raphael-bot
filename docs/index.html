@@ -1,1 +1,607 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raphael AI Assistant Documentation</title>
+    <style>
+        :root {
+            --primary: #6c5ce7;
+            --secondary: #a29bfe;
+            --dark: #2d3436;
+            --darker: #1e272e;
+            --light: #f5f6fa;
+            --accent: #fd79a8;
+            --success: #00b894;
+            --warning: #fdcb6e;
+            --danger: #d63031;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--darker);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+            text-shadow: 0 0 10px rgba(108, 92, 231, 0.5);
+        }
+
+        h2 {
+            font-size: 2rem;
+            margin: 2rem 0 1rem;
+            color: var(--secondary);
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        h2:hover {
+            color: var(--accent);
+            transform: translateX(10px);
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            margin: 1.5rem 0 0.5rem;
+            color: var(--secondary);
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        a {
+            color: var(--accent);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a:hover {
+            color: var(--primary);
+            text-decoration: underline;
+        }
+
+        .card {
+            background-color: var(--dark);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .feature {
+            background-color: rgba(108, 92, 231, 0.1);
+            padding: 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .feature:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+            transform: scale(1.02);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .code-container {
+            position: relative;
+            margin: 1.5rem 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #1a1a2e;
+            padding: 0.5rem 1rem;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+        }
+
+        .filename {
+            font-family: 'Fira Code', monospace;
+            color: var(--light);
+        }
+
+        .copy-btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+        }
+
+        .copy-btn:hover {
+            background-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .copy-btn.copied {
+            background-color: var(--success);
+        }
+
+        pre {
+            margin: 0;
+            padding: 1rem;
+            background-color: #1e1e2e;
+            color: #f8f8f2;
+            overflow-x: auto;
+            border-bottom-left-radius: 8px;
+            border-bottom-right-radius: 8px;
+            tab-size: 4;
+        }
+
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.9rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background-color: var(--primary);
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .tag:hover {
+            background-color: var(--accent);
+            transform: scale(1.1);
+        }
+
+        .intent-list {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 1rem 0;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 3rem;
+            padding: 2rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(108, 92, 231, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(108, 92, 231, 0);
+            }
+        }
+
+        .highlight {
+            animation: pulse 2s infinite;
+            border-radius: 50%;
+            display: inline-block;
+            padding: 0.5rem;
+            margin: 0 0.5rem;
+        }
+
+        .command-example {
+            background-color: rgba(253, 121, 168, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .command-example:hover {
+            background-color: rgba(253, 121, 168, 0.2);
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.5rem;
+            }
+            
+            h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Raphael AI Assistant</h1>
+            <p>A deep learning based virtual assistant with natural language processing capabilities</p>
+        </header>
+
+        <section class="card">
+            <h2>Project Overview</h2>
+            <p>Raphael is an intelligent virtual assistant built using Python and TensorFlow/Keras for natural language understanding. It combines deep learning with practical functionality like system control, web browsing, and conversation.</p>
+            
+            <div class="grid">
+                <div class="feature">
+                    <div class="feature-icon">💬</div>
+                    <h3>Natural Language Processing</h3>
+                    <p>Uses TensorFlow/Keras with custom-trained models to understand user intents and respond appropriately.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🎙️</div>
+                    <h3>Voice Interaction</h3>
+                    <p>Supports both text and voice commands using speech recognition and text-to-speech synthesis.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚙️</div>
+                    <h3>System Control</h3>
+                    <p>Can open/close applications, adjust volume, check system status, and more.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Technical Architecture</h2>
+            <p>The project consists of several key components working together:</p>
+            
+            <h3>Core Modules</h3>
+            <ul>
+                <li><strong>main.py</strong> - The main application handling voice recognition, command processing, and response generation</li>
+                <li><strong>model_train.py</strong> - Trains the NLP model using the intents from intents.json</li>
+                <li><strong>model_test.py</strong> - Provides a text-based interface to test the trained model</li>
+                <li><strong>intents.json</strong> - Contains all the training patterns, responses, and tags for the NLP model</li>
+            </ul>
+            
+            <h3>Key Dependencies</h3>
+            <div class="intent-list">
+                <span class="tag">TensorFlow/Keras</span>
+                <span class="tag">pyttsx3</span>
+                <span class="tag">SpeechRecognition</span>
+                <span class="tag">NumPy</span>
+                <span class="tag">scikit-learn</span>
+                <span class="tag">pyautogui</span>
+                <span class="tag">psutil</span>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Intent Recognition</h2>
+            <p>The assistant understands user queries through a trained neural network that classifies input text into predefined intent categories.</p>
+            
+            <h3>Sample Intents</h3>
+            <div class="grid">
+                <div class="feature">
+                    <h4>Greeting</h4>
+                    <p>Responds to hello, hi, greetings</p>
+                    <div class="command-example">
+                        <strong>Patterns:</strong> "Hi there", "Hello", "Good day"<br>
+                        <strong>Responses:</strong> "Hello", "Good to see you again"
+                    </div>
+                </div>
+                <div class="feature">
+                    <h4>Jokes</h4>
+                    <p>Tells random jokes</p>
+                    <div class="command-example">
+                        <strong>Patterns:</strong> "Tell me a joke", "Make me laugh"<br>
+                        <strong>Responses:</strong> Various humorous responses
+                    </div>
+                </div>
+                <div class="feature">
+                    <h4>System Control</h4>
+                    <p>Manages applications and settings</p>
+                    <div class="command-example">
+                        <strong>Commands:</strong> "Open calculator", "Volume up", "Close notepad"
+                    </div>
+                </div>
+            </div>
+            
+            <p>The complete intent schema includes many more categories like goodbye, thanks, datetime queries, identity questions, and more.</p>
+        </section>
+
+        <section class="card">
+            <h2>Code Examples</h2>
+            
+            <h3>Main Application (main.py)</h3>
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="filename">main.py</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                </div>
+                <pre><code>import pyttsx3
+import speech_recognition as sr
+import datetime, os, time, webbrowser
+import pyautogui 
+import sys
+import psutil
+import json, pickle, random
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+import numpy as np
+
+# Initialization code omitted for brevity...
+
+def speak(text):
+    engine = initialize_engine()
+    print(f"SPEAKING: {text}")
+    engine.say(text)
+    engine.runAndWait()
+
+def command():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        r.adjust_for_ambient_noise(source, duration=0.5)
+        print("Listening.....", end="", flush=True)
+        audio = r.listen(source)
+    try:
+        query = r.recognize_google(audio, language="en-in")
+        print(f"User said: {query}")
+    except Exception as e:
+        print("Say that again please")
+        return "None"
+    return query
+
+# More functions omitted...</code></pre>
+            </div>
+            
+            <h3>Model Training (model_train.py)</h3>
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="filename">model_train.py</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                </div>
+                <pre><code>import json
+import numpy as np
+import tensorflow as tf
+from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
+from tensorflow.keras.preprocessing.text import Tokenizer
+from tensorflow.keras.preprocessing.sequence import pad_sequences
+from sklearn.preprocessing import LabelEncoder
+import pickle
+
+with open("intents.json") as file:
+    data = json.load(file)
+
+# Prepare training data
+training_sentences = []
+training_labels = []
+labels = []
+responses = []
+
+for intent in data["intents"]:
+    for pattern in intent['patterns']:
+        training_sentences.append(pattern)
+        training_labels.append(intent['tag'])
+    responses.append(intent['responses'])
+
+    if intent['tag'] not in labels:
+        labels.append(intent['tag'])
+
+# Encode labels
+label_encoder = LabelEncoder()
+label_encoder.fit(training_labels)
+training_labels = label_encoder.transform(training_labels)
+
+# Tokenize text
+tokenizer = Tokenizer(num_words=1000, oov_token="&lt;OOV&gt;")
+tokenizer.fit_on_texts(training_sentences)
+sequences = tokenizer.texts_to_sequences(training_sentences)
+padded_sequences = pad_sequences(sequences, truncating='post', maxlen=20)
+
+# Build model
+model = Sequential([
+    Embedding(1000, 16, input_length=20),
+    GlobalAveragePooling1D(),
+    Dense(16, activation='relu'),
+    Dense(16, activation='relu'),
+    Dense(len(labels), activation='softmax')
+])
+
+model.compile(loss='sparse_categorical_crossentropy', 
+              optimizer='adam', 
+              metrics=['accuracy'])
+
+# Train model
+history = model.fit(padded_sequences, np.array(training_labels), epochs=1000)
+
+# Save model and tokenizers
+model.save("chat_model.h5")
+with open("tokenizer.pkl", "wb") as f:
+    pickle.dump(tokenizer, f)
+with open("label_encoder.pkl", "wb") as encoder_file:
+    pickle.dump(label_encoder, encoder_file)</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Getting Started</h2>
+            <h3>Installation</h3>
+            <p>To set up Raphael on your system:</p>
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="filename">Terminal</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                </div>
+                <pre><code># Clone the repository
+git clone https://github.com/Frosty-8/frosty-8-raphael-bot.git
+
+# Navigate to project directory
+cd frosty-8-raphael-bot
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Train the model (optional - pre-trained model included)
+python model_train.py
+
+# Run the assistant
+python main.py</code></pre>
+            </div>
+            
+            <h3>Requirements</h3>
+            <div class="code-container">
+                <div class="code-header">
+                    <span class="filename">requirements.txt</span>
+                    <button class="copy-btn" onclick="copyCode(this)">Copy Code</button>
+                </div>
+                <pre><code>tensorflow>=2.0
+pyttsx3==2.90
+SpeechRecognition==3.8.1
+numpy>=1.19.5
+pyautogui>=0.9.53
+psutil>=5.8.0
+scikit-learn>=0.24.2</code></pre>
+            </div>
+        </section>
+
+        <section class="card">
+            <h2>Features & Capabilities</h2>
+            
+            <div class="grid">
+                <div class="feature">
+                    <h3>Conversational AI</h3>
+                    <ul>
+                        <li>Natural language understanding</li>
+                        <li>Contextual responses</li>
+                        <li>Multiple response variations</li>
+                        <li>Emotional intelligence (responds to compliments/insults)</li>
+                    </ul>
+                </div>
+                <div class="feature">
+                    <h3>System Integration</h3>
+                    <ul>
+                        <li>Open/close applications</li>
+                        <li>Volume control</li>
+                        <li>System monitoring (CPU, battery)</li>
+                        <li>Schedule management</li>
+                    </ul>
+                </div>
+                <div class="feature">
+                    <h3>Web Services</h3>
+                    <ul>
+                        <li>Web browsing</li>
+                        <li>Social media integration</li>
+                        <li>Google searches</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>Example Commands</h3>
+            <div class="command-example">
+                <strong>"Hello Raphael"</strong> - Initiates conversation<br>
+                <strong>"What's the time?"</strong> - Provides current time<br>
+                <strong>"Tell me a joke"</strong> - Shares a humorous response<br>
+                <strong>"Open calculator"</strong> - Launches calculator app<br>
+                <strong>"Volume up"</strong> - Increases system volume<br>
+                <strong>"What's my schedule?"</strong> - Reads today's schedule<br>
+                <strong>"System condition"</strong> - Reports CPU and battery status<br>
+                <strong>"Open LinkedIn"</strong> - Launches LinkedIn in browser
+            </div>
+        </section>
+
+        <footer class="footer">
+            <p>Raphael AI Assistant - Created by Frosty</p>
+            <p>Documentation generated on June 19, 2024</p>
+        </footer>
+    </div>
+
+    <script>
+        function copyCode(button) {
+            const codeContainer = button.parentElement.parentElement;
+            const codeElement = codeContainer.querySelector('code');
+            const textToCopy = codeElement.textContent;
+            
+            navigator.clipboard.writeText(textToCopy).then(() => {
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = 'Copy Code';
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy text: ', err);
+            });
+        }
+        
+        // Add animation to cards when they come into view
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.animation = 'fadeIn 0.5s ease-out forwards';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        
+        document.querySelectorAll('.card, .feature').forEach(card => {
+            card.style.opacity = '0';
+            observer.observe(card);
+        });
+    </script>
+</body>
+</html>
